@@ -2,17 +2,18 @@
 clear all;close all;clc;
 n = 100;
 p = 2000;
-blocks = 5;
-y = randn(n,1);
-X = randn(n,p);
-beta0 = (randn(p,1));
-z0 = (randn(p,1));
-mu0 = (randn(p,1));
+blocks = 10;
+y = sprandn(n,1,.1);
+X = sprandn(n,p,.1);
+
+beta0 = pos(sprandn(p,1,.1));
+z0 = pos(sprandn(p,1,.1));
+mu0 = pos(sprandn(p,1,.1));
 
 k = 1;
 err(k) = norm(beta0-z0,2);
-toler = 1e-3;
-maxIter = 200;
+toler = 1e-4;
+maxIter = 500;
 for ii = 1:maxIter
 
 [beta_out,z_out,mu_out] = nnls(y,X,beta0,z0, mu0, blocks);
@@ -22,8 +23,8 @@ mu0 = mu_out;
 beta(:,k) = beta_out;
 z(:,k) = z_out;
 mu(:,k) = mu_out;
-
 k = k+1;
+
 err(k) = norm(beta_out-z_out,2);
 if err(k) <toler
     disp('below tolerance')
@@ -39,9 +40,16 @@ xlabel('iterations')
 ylabel('error')
 title('l-2 norm error')
 
+figure
+plot(5:k,err(5:k))
+xlabel('iterations')
+ylabel('error')
+title('l-2 norm error excluding init')
+
 function [beta, z, mu] = nnls(y, X, beta, z, mu, blocks)
-alpha = 1;
-gamma = 1000;
+alpha = 1.8;
+gamma = 100;
+% gamma = 1000;
 [n,p] = size(X); 
 block_size = floor(p/blocks);
 or = randperm(p);
@@ -55,8 +63,8 @@ z = z(or);
         idx_ub = idx_lb + block_size -1;
         indices = or(idx_lb:idx_ub);
         tmpX = X(:,indices);
-%         disp('after reassign')
-        beta(indices) = inv(1/n*tmpX'*tmpX + gamma*eye(block_size)) *(1/n* tmpX'*y - mu(indices) + gamma*z(indices));
+%         beta(indices) = -inv(1/n*tmpX'*tmpX + gamma*eye(block_size)) *(1/n* tmpX'*y - mu(indices) - gamma*z(indices));
+        beta(indices) = (1/n*tmpX'*tmpX + gamma*eye(block_size)) \ (1/n* tmpX'*y + mu(indices) + gamma*z(indices));
     end
     
     %max(z,0) is what pos does
