@@ -36,9 +36,7 @@ gamma = 1;
 [n,p] = size(X); 
 block_size = floor(p/blocks);
 or = randperm(p);
-% disp('BEFORE SHUFFLE')
-% beta
-% disp('after shuffle')
+
 beta = beta(or);
 z = z(or);
 
