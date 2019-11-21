@@ -1,17 +1,17 @@
 %% RAC - MBADMM - non negative least squares
 clear all;close all;clc;
-n = 100;
-p = 2000;
+n = 10;
+p = 20;
 blocks = 5;
 y = randn(n,1);
 X = randn(n,p);
-beta0 = (randn(p,1));
-z0 = (randn(p,1));
-mu0 = (randn(p,1));
+beta0 = pos(randn(p,1));
+z0 = pos(randn(p,1));
+mu0 = pos(randn(p,1));
 
 k = 1;
 err(k) = norm(beta0-z0,2);
-toler = 1e-3;
+toler = 1e-4;
 maxIter = 200;
 for ii = 1:maxIter
 
@@ -26,7 +26,6 @@ mu(:,k) = mu_out;
 k = k+1;
 err(k) = norm(beta_out-z_out,2);
 if err(k) <toler
-    disp('below tolerance')
     break
 else
 end
