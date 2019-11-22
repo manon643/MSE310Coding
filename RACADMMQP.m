@@ -19,10 +19,10 @@ for k=1:300,
   or=randperm(n);
 % Update x following a random order
   for ii=1:nb,
-      il=(ii-1)*nv+1;
-      iu=il+nv-1;
+      il=(ii-1)*nv+1
+      iu=il+nv-1
       % find the nv indexes of the (ii)th block according to or
-      p=or(il:iu);
+      p=or(il:iu)
       % substract them from the two vectors
       Qxc=Qxc-Q(:,p)*x(p);
       Axb=Axb-A(:,p)*x(p);

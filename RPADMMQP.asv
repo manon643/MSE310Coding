@@ -24,7 +24,7 @@ Axb=A*x-b;
 %
 iter=0;
 for k=1:300,
-  or=randperm(nb)
+  or=randperm(nb);
 % Update x following a random order
   for ii=1:nb,
       il=(or(ii)-1)*nv+1
